@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025年第三季度财务分析：SOFI & UNH</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none; }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', 'SimSun', '宋体', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        
+        .header .date {
+            color: #95a5a6;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .executive-summary {
+            background: #ecf0f1;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .executive-summary h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .company-section {
+            margin-bottom: 50px;
+        }
+        
+        .company-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .company-header.sofi {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+        }
+        
+        .company-header.unh {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .company-header h2 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        
+        .company-header .ticker {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .metric-card.positive {
+            border-left-color: #27ae60;
+        }
+        
+        .metric-card.negative {
+            border-left-color: #e74c3c;
+        }
+        
+        .metric-card .label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        
+        .metric-card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .metric-card .change {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .metric-card .change.positive {
+            color: #27ae60;
+        }
+        
+        .metric-card .change.negative {
+            color: #e74c3c;
+        }
+        
+        .chart-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .chart-container h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .canvas-wrapper {
+            position: relative;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        table th {
+            background: #34495e;
+            color: white;
+            font-weight: 600;
+        }
+        
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .positive-value {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        .negative-value {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .analysis-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .analysis-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .analysis-section ul {
+            margin-left: 20px;
+        }
+        
+        .analysis-section li {
+            margin-bottom: 10px;
+        }
+        
+        .recommendation-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .recommendation-box.buy {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        
+        .recommendation-box.hold {
+            background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+        }
+        
+        .recommendation-box h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation-box .rating {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .key-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .highlight-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .highlight-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .risk-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin: 5px;
+        }
+        
+        .risk-low {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .risk-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .risk-high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 标题 -->
+        <div class="header">
+            <h1>2025年第三季度财务分析</h1>
+            <div class="subtitle">SoFi Technologies (SOFI) & UnitedHealth Group (UNH)</div>
+            <div class="date">报告日期：2025年10月29日 | 财报发布日期：2025年10月28日</div>
+        </div>
+
+        <!-- 执行摘要 -->
+        <div class="executive-summary">
+            <h2>执行摘要</h2>
+            <p><strong>SOFI：</strong> 第三季度业绩表现卓越，营收达9.616亿美元（同比增长38%），调整后每股收益0.11美元（超预期37.5%）。公司新增90.5万名会员，总会员数达到1,260万。管理层上调全年指引，显示对持续增长势头的信心。然而，股票估值溢价，分析师共识为"持有"。</p>
+            <br>
+            <p><strong>UNH：</strong> 第三季度业绩稳健，营收1,132亿美元（同比增长12%），调整后每股收益2.92美元（超预期）。尽管医疗成本趋势上升，公司仍保持了符合预期的利润率，并上调了全年指引。强劲的现金生成能力和分析师"买入"共识使UNH呈现出更有利的风险回报比。</p>
+        </div>
+
+        <!-- SOFI 部分 -->
+        <div class="company-section">
+            <div class="company-header sofi">
+                <h2>SoFi Technologies</h2>
+                <div class="ticker">纳斯达克：SOFI | 数字金融服务</div>
+            </div>
+
+            <!-- 关键指标 -->
+            <div class="metrics-grid">
+                <div class="metric-card positive">
+                    <div class="label">第三季度营收</div>
+                    <div class="value">$9.616亿</div>
+                    <div class="change positive">↑ 38% 同比（超预期：$9.04亿）</div>
+                </div>
+                <div class="metric-card positive">
+                    <div class="label">调整后每股收益</div>
+                    <div class="value">$0.11</div>
+                    <div class="change positive">↑ 120% 同比（超预期：$0.08）</div>
+                </div>
+                <div class="metric-card positive">
+                    <div class="label">GAAP净收入</div>
+                    <div class="value">$1.394亿</div>
+                    <div class="change positive">连续第8个季度盈利</div>
+                </div>
+                <div class="metric-card positive">
+                    <div class="label">总会员数</div>
+                    <div class="value">1,260万</div>
+                    <div class="change positive">↑ 35% 同比（第三季度+90.5万）</div>
+                </div>
+                <div class="metric-card positive">
+                    <div class="label">调整后EBITDA</div>
+                    <div class="value">$2.77亿</div>
+                    <div class="change positive">29%利润率</div>
+                </div>
+                <div class="metric-card positive">
+                    <div class="label">贷款发放量</div>
+                    <div class="value">$99亿</div>
+                    <div class="change positive">↑ 57% 同比</div>
+                </div>
+            </div>
+
+            <!-- 业绩图表 -->
+            <div class="chart-container">
+                <h3>SOFI营收与会员增长趋势</h3>
+                <div class="canvas-wrapper">
+                    <canvas id="sofiRevenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 分部业绩 -->
+            <div class="chart-container">
+                <h3>SOFI各业务分部营收多元化</h3>
+                <div class="canvas-wrapper">
+                    <canvas id="sofiSegmentChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 关键亮点 -->
+            <div class="key-highlights">
+                <div class="highlight-card">
+                    <h4>✓ 强劲的营收多元化</h4>
+                    <p>基于费用的营收达到4.087亿美元（同比增长50%），目前占调整后净营收的43%。这一战略转变降低了对利息收入的依赖，创造了更多元化的收入流。</p>
+                </div>
+                <div class="highlight-card">
+                    <h4>✓ 卓越的会员增长</h4>
+                    <p>第三季度新增创纪录的90.5万名会员，交叉购买率达40%。金融服务生产力循环（FSPL）策略继续推动有机增长并降低客户获取成本。</p>
+                </div>
+                <div class="highlight-card">
+                    <h4>✓ 盈利能力指标改善</h4>
+                    <p>有形普通股权回报率（ROTCE）提升至8.5%（同比上升310个基点）。公司自上市以来持续超越"40法则"，平均得分为58%。</p>
+                </div>
+                <div class="highlight-card">
+                    <h4>⚠ 估值溢价担忧</h4>
+                    <p>目前交易价格远高于分析师目标价。共识为"持有"，平均目标价21.30美元 vs 当前价格28.68美元，显示近期上涨空间有限。</p>
+                </div>
+            </div>
+
+            <!-- 分析 -->
+            <div class="analysis-section">
+                <h3>详细分析：SOFI</h3>
+                <ul>
+                    <li><strong>营收加速增长：</strong>第三季度营收9.616亿美元超预期6.3%，同比增长38%。这一加速增长由所有三个业务分部的强劲表现推动：贷款业务（同比+13%）、金融服务（同比+76%）和技术平台（稳定增长）。</li>
+                    <li><strong>会员与产品指标：</strong>新增创纪录的90.5万名会员和140万个新产品，展示了SoFi一站式战略的有效性。40%的交叉购买率表明现有会员对产品的强劲采用。</li>
+                    <li><strong>信贷质量保持强劲：</strong>个人贷款净核销率下降23个基点至2.60%。加权平均借款人收入15.7万美元，FICO评分745分（个人贷款）和773分（学生贷款），表明高质量的信贷组合。</li>
+                    <li><strong>再次上调指引：</strong>2025全年指引上调至约35.4亿美元营收（增长35%）和约0.37美元调整后每股收益。这是连续第三个季度上调指引，展示了管理层的信心。</li>
+                    <li><strong>战略举措：</strong>公司正在扩展至加密货币/区块链服务、人工智能和SoFi Pay。这些新产品为2026年营收增长超过20%提供了良好的可见性。</li>
+                    <li><strong>融资组合优化：</strong>存款平均利率比仓储融资低190个基点，由于成功重组融资基础，每年可节约约6.27亿美元利息支出。</li>
+                </ul>
+            </div>
+
+            <!-- 分析师评级 -->
+            <div class="chart-container">
+                <h3>SOFI分析师评级分布</h3>
+                <div class="canvas-wrapper" style="height: 300px;">
+                    <canvas id="sofiAnalystChart"></canvas>
+                </div>
+                <p style="text-align: center; margin-top: 15px;"><strong>共识：</strong>持有 | <strong>平均目标价：</strong>$21.30 | <strong>当前价格：</strong>$28.68 | <strong>隐含下行空间：</strong>-25.7%</p>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- UNH 部分 -->
+        <div class="company-section">
+            <div class="company-header unh">
+                <h2>UnitedHealth Group</h2>
+                <div class="ticker">纽交所：UNH | 医疗保险与服务</div>
+            </div>
+
+            <!-- 关键指标 -->
+            <div class="metrics-grid">
+                <div class="metric-card positive">
+                    <div class="label">第三季度营收</div>
+                    <div class="value">$1,132亿</div>
+                    <div class="change positive">↑ 12% 同比</div>
+                </div>
+                <div class="metric-card positive">
+                    <div class="label">调整后每股收益</div>
+                    <div class="value">$2.92</div>
+                    <div class="change positive">超预期：$2.81</div>
+                </div>
+                <div class="metric-card">
+                    <div class="label">GAAP每股收益</div>
+                    <div class="value">$2.59</div>
+                    <div class="change negative">↓ 60% 同比</div>
+                </div>
+                <div class="metric-card">
+                    <div class="label">医疗费用率</div>
+                    <div class="value">89.9%</div>
+                    <div class="change">符合指引</div>
+                </div>
+                <div class="metric-card positive">
+                    <div class="label">运营现金流</div>
+                    <div class="value">$59亿</div>
+                    <div class="change positive">净收入的2.3倍</div>
+                </div>
+                <div class="metric-card positive">
+                    <div class="label">服务会员</div>
+                    <div class="value">5,010万</div>
+                    <div class="change positive">↑ 79.5万 同比</div>
+                </div>
+            </div>
+
+            <!-- 业绩图表 -->
+            <div class="chart-container">
+                <h3>UNH各业务分部营收增长</h3>
+                <div class="canvas-wrapper">
+                    <canvas id="unhRevenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 利润率分析 -->
+            <div class="chart-container">
+                <h3>UNH医疗费用率（MCR）趋势</h3>
+                <div class="canvas-wrapper">
+                    <canvas id="unhMcrChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 关键亮点 -->
+            <div class="key-highlights">
+                <div class="highlight-card">
+                    <h4>✓ 稳健的营收增长</h4>
+                    <p>第三季度营收同比增长12%至1,132亿美元。UnitedHealthcare营收增长16%至871亿美元，由Medicare与退休及社区与州业务推动。Optum营收增长8%至692亿美元。</p>
+                </div>
+                <div class="highlight-card">
+                    <h4>✓ 上调2025年指引</h4>
+                    <p>全年调整后每股收益指引上调至至少16.25美元（从16.00美元），尽管Medicare Advantage环境具有挑战性，仍展示了信心。</p>
+                </div>
+                <div class="highlight-card">
+                    <h4>✓ 强劲的现金生成</h4>
+                    <p>第三季度运营现金流59亿美元（净收入的2.3倍），展示了强劲的现金生成能力。债务资本比率稳定在44.1%。</p>
+                </div>
+                <div class="highlight-card">
+                    <h4>⚠ 利润率压力</h4>
+                    <p>运营利润率从去年的5.6%下降至2.1%，主要由于医疗成本趋势上升和Medicare资金削减。MCR为89.9%反映了使用率压力。</p>
+                </div>
+            </div>
+
+            <!-- 分析 -->
+            <div class="analysis-section">
+                <h3>详细分析：UNH</h3>
+                <ul>
+                    <li><strong>盈利超预期：</strong>调整后每股收益2.92美元超过共识2.81美元。虽然GAAP每股收益因医疗成本上升而同比下降60%，但调整后的结果展示了运营韧性。</li>
+                    <li><strong>营收表现：</strong>总营收1,132亿美元略低于预期（1,133.6亿美元），但同比稳健增长12%。UnitedHealthcare领跑增长16%，Optum贡献8%增长。</li>
+                    <li><strong>医疗成本趋势：</strong>MCR为89.9%符合第二季度指引，但同比上升470个基点，因医疗成本趋势显著升高和Medicare资金削减的持续影响。管理层预计趋势将持续至2025年剩余时间。</li>
+                    <li><strong>Medicare Advantage战略：</strong>公司退出100多个Medicare Advantage计划（影响约18万受益人），但将继续向94%的合格受益人提供服务。这展示了管理表现不佳业务的纪律性方法。</li>
+                    <li><strong>Optum表现：</strong>运营收入为15亿美元（同比持平）。Optum Rx调整后处方量增长至4.14亿（从4.07亿），但由于高成本药物组合，运营利润率略降至3.9%（从4.5%）。</li>
+                    <li><strong>2026年展望：</strong>管理层预计2026年"稳健但温和"的盈利增长，盈利增长将在2027年快速增强。2026年Medicare Advantage定价策略假设约10%的趋势 vs 当前7.5%的预期。</li>
+                    <li><strong>资产负债表实力：</strong>尽管收购Amedisys，债务资本比率仍维持在44.1%。强劲的现金生成使公司能够很好地进行持续战略投资。</li>
+                </ul>
+            </div>
+
+            <!-- 分析师评级 -->
+            <div class="chart-container">
+                <h3>UNH分析师评级分布</h3>
+                <div class="canvas-wrapper" style="height: 300px;">
+                    <canvas id="unhAnalystChart"></canvas>
+                </div>
+                <p style="text-align: center; margin-top: 15px;"><strong>共识：</strong>买入 | <strong>平均目标价：</strong>$403.76 | <strong>当前价格：</strong>$365.37 | <strong>隐含上行空间：</strong>+10.5%</p>
+            </div>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- 投资组合持仓概览 -->
+        <div class="company-section">
+            <div class="company-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h2>投资组合持仓概览</h2>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>指标</th>
+                        <th>SOFI</th>
+                        <th>UNH</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>投资组合权重</strong></td>
+                        <td>7.22%</td>
+                        <td>18.39%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>回报率</strong></td>
+                        <td class="positive-value">+54.72%</td>
+                        <td class="positive-value">+19.26%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>风险状况</strong></td>
+                        <td><span class="risk-indicator risk-high">高增长/高风险</span></td>
+                        <td><span class="risk-indicator risk-low">较低风险</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 投资建议 -->
+        <div class="company-section">
+            <div class="company-header" style="background: linear-gradient(135deg, #F97794 0%, #623AA2 100%);">
+                <h2>投资建议</h2>
+            </div>
+
+            <!-- SOFI 建议 -->
+            <div class="recommendation-box hold">
+                <h3>SOFI Technologies（纳斯达克：SOFI）</h3>
+                <div class="rating">持有 / 获利了结</div>
+                <p><strong>理由：</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>持仓已上涨54.72%，表现显著优于大盘</li>
+                    <li>当前价格（28.68美元）比分析师共识目标价（21.30美元）高出35%</li>
+                    <li>第三季度业绩表现卓越，但大部分利好消息似乎已经反映在股价中</li>
+                    <li>尽管基本面强劲，但估值担忧持续存在</li>
+                    <li>5个买入、8个持有、4个卖出评级显示分析师情绪不一</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>建议操作：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>减仓30-40%：</strong>锁定部分收益，将持仓从7.22%降至约4.8%</li>
+                    <li><strong>保留剩余60-70%：</strong>维持对长期增长故事的敞口</li>
+                    <li><strong>重新评估时机：</strong>2026年1月全年业绩公布后及任何估值压缩</li>
+                    <li><strong>买入考虑：</strong>仅当股价回调至22-24美元区间（分析师目标价区域）</li>
+                </ul>
+            </div>
+
+            <!-- UNH 建议 -->
+            <div class="recommendation-box buy">
+                <h3>UnitedHealth Group（纽交所：UNH）</h3>
+                <div class="rating">买入 / 加仓</div>
+                <p><strong>理由：</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>强劲的分析师共识：18个买入、2个持有、2个卖出评级</li>
+                    <li>交易价格低于分析师目标价（365美元 vs 404美元平均），提供10.5%上行空间</li>
+                    <li>沃伦·巴菲特和David Tepper最近建仓/增持</li>
+                    <li>当前持仓（18.39%）符合投资组合指引</li>
+                    <li>尽管环境具有挑战性，第三季度盈利超预期展示了韧性</li>
+                    <li>强劲的现金生成（59亿美元）和上调的指引提供信心</li>
+                    <li>Medicare Advantage逆风很大程度上已反映在股价中；2027年及以后的展望改善</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>建议操作：</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>增持：</strong>考虑将持仓从18.39%增加至20-22%</li>
+                    <li><strong>目标配置：</strong>使UNH达到投资组合的20-22%（在25%最大限额内）</li>
+                    <li><strong>进场策略：</strong>如果价格保持在360-375美元，分2-3批逐步建仓</li>
+                    <li><strong>长期持有：</strong>为2026-2027年利润率恢复故事做好准备</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 风险考量 -->
+        <div class="analysis-section">
+            <h3>风险考量</h3>
+            <p><strong>SOFI风险：</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>溢价估值几乎没有犯错空间；任何盈利不及预期都可能引发急剧回调</li>
+                <li>数字银行领域竞争加剧</li>
+                <li>经济衰退可能影响信贷质量和贷款需求</li>
+                <li>利率环境仍存在不确定性</li>
+            </ul>
+            <br>
+            <p><strong>UNH风险：</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>持续的高医疗成本趋势可能进一步压缩利润率</li>
+                <li>司法部对Medicare业务的调查带来监管不确定性</li>
+                <li>Medicare Advantage资金削减和政策变化</li>
+                <li>Medicare Advantage市场竞争加剧</li>
+                <li>医疗保健行业的政治/监管风险</li>
+            </ul>
+        </div>
+
+        <!-- 对比分析图表 -->
+        <div class="chart-container">
+            <h3>投资组合配置建议：调整前后对比</h3>
+            <div class="canvas-wrapper" style="height: 350px;">
+                <canvas id="portfolioAllocationChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 行动计划摘要 -->
+        <div class="executive-summary">
+            <h2>行动计划摘要</h2>
+            <ol style="margin-left: 20px; line-height: 2;">
+                <li><strong>SOFI - 获利了结：</strong>考虑减持30-40%的持仓以锁定54.72%的收益。这将使敞口从7.22%降至约4.8%，同时保持上行参与。</li>
+                <li><strong>UNH - 加仓：</strong>考虑将持仓从18.39%增加至21-22%左右。</li>
+                <li><strong>现金管理：</strong>保持充足的现金储备（约5-7%）以应对即将到来的机会和市场波动。</li>
+                <li><strong>密切监控：</strong>关注SOFI是否回调至22-24美元区间以重新进场。追踪UNH在第四季度及2026年的利润率恢复进展。</li>
+                <li><strong>再平衡时机：</strong>在消化完整的第三季度财报影响后、年底税务考量之前的11月初执行交易。</li>
+            </ol>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p><strong>免责声明：</strong>本分析仅供参考，不构成财务建议。所有投资决策应基于个人情况、风险承受能力，并咨询合格的财务顾问。过往表现不能保证未来结果。</p>
+            <br>
+            <p>报告生成时间：2025年10月29日 | 数据来源：公司财报、SEC文件、Yahoo Finance、TipRanks、Zacks、MarketBeat</p>
+        </div>
+    </div>
+
+    <script>
+        // SOFI营收图表
+        const sofiRevenueCtx = document.getElementById('sofiRevenueChart').getContext('2d');
+        new Chart(sofiRevenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['2023 Q3', '2023 Q4', '2024 Q1', '2024 Q2', '2024 Q3', '2024 Q4', '2025 Q1', '2025 Q2', '2025 Q3'],
+                datasets: [{
+                    label: '调整后净营收（百万美元）',
+                    data: [537, 615, 645, 697, 731, 823, 862, 954, 961.6],
+                    borderColor: '#3a7bd5',
+                    backgroundColor: 'rgba(58, 123, 213, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y'
+                }, {
+                    label: '总会员数（百万）',
+                    data: [6.2, 7.0, 7.5, 8.1, 8.8, 9.4, 10.3, 11.7, 12.6],
+                    borderColor: '#00d2ff',
+                    backgroundColor: 'rgba(0, 210, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    title: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: '营收（百万美元）'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: '会员数（百万）'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // SOFI业务分部图表
+        const sofiSegmentCtx = document.getElementById('sofiSegmentChart').getContext('2d');
+        new Chart(sofiSegmentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['贷款业务', '金融服务', '技术平台', '基于费用的营收'],
+                datasets: [{
+                    label: '2025年第三季度营收（百万美元）',
+                    data: [426, 216, 319, 408.7],
+                    backgroundColor: [
+                        'rgba(58, 123, 213, 0.8)',
+                        'rgba(0, 210, 255, 0.8)',
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)'
+                    ],
+                    borderColor: [
+                        '#3a7bd5',
+                        '#00d2ff',
+                        '#667eea',
+                        '#764ba2'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.parsed.y.toFixed(1) + '百万';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '营收（百万美元）'
+                        }
+                    }
+                }
+            }
+        });
+
+        // SOFI分析师评级图表
+        const sofiAnalystCtx = document.getElementById('sofiAnalystChart').getContext('2d');
+        new Chart(sofiAnalystCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['买入', '持有', '卖出'],
+                datasets: [{
+                    data: [5, 8, 4],
+                    backgroundColor: [
+                        'rgba(39, 174, 96, 0.8)',
+                        'rgba(241, 196, 15, 0.8)',
+                        'rgba(231, 76, 60, 0.8)'
+                    ],
+                    borderColor: [
+                        '#27ae60',
+                        '#f1c40f',
+                        '#e74c3c'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + '：' + context.parsed + ' 位分析师';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // UNH营收图表
+        const unhRevenueCtx = document.getElementById('unhRevenueChart').getContext('2d');
+        new Chart(unhRevenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2024 Q3', '2024 Q4', '2025 Q1', '2025 Q2', '2025 Q3'],
+                datasets: [{
+                    label: 'UnitedHealthcare（十亿美元）',
+                    data: [75.0, 78.3, 83.5, 86.1, 87.1],
+                    backgroundColor: 'rgba(240, 147, 251, 0.8)',
+                    borderColor: '#f093fb',
+                    borderWidth: 2
+                }, {
+                    label: 'Optum（十亿美元）',
+                    data: [62.9, 64.2, 66.8, 68.0, 69.2],
+                    backgroundColor: 'rgba(245, 87, 108, 0.8)',
+                    borderColor: '#f5576c',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + '：$' + context.parsed.y.toFixed(1) + '十亿';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: '营收（十亿美元）'
+                        }
+                    }
+                }
+            }
+        });
+
+        // UNH MCR图表
+        const unhMcrCtx = document.getElementById('unhMcrChart').getContext('2d');
+        new Chart(unhMcrCtx, {
+            type: 'line',
+            data: {
+                labels: ['2023 Q3', '2023 Q4', '2024 Q1', '2024 Q2', '2024 Q3', '2024 Q4', '2025 Q1', '2025 Q2', '2025 Q3'],
+                datasets: [{
+                    label: '医疗费用率（%）',
+                    data: [82.3, 82.0, 82.1, 85.2, 84.3, 85.8, 87.5, 89.7, 89.9],
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'MCR：' + context.parsed.y.toFixed(1) + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 80,
+                        max: 92,
+                        title: {
+                            display: true,
+                            text: 'MCR（%）'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // UNH分析师评级图表
+        const unhAnalystCtx = document.getElementById('unhAnalystChart').getContext('2d');
+        new Chart(unhAnalystCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['买入', '持有', '卖出'],
+                datasets: [{
+                    data: [18, 2, 2],
+                    backgroundColor: [
+                        'rgba(39, 174, 96, 0.8)',
+                        'rgba(241, 196, 15, 0.8)',
+                        'rgba(231, 76, 60, 0.8)'
+                    ],
+                    borderColor: [
+                        '#27ae60',
+                        '#f1c40f',
+                        '#e74c3c'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + '：' + context.parsed + ' 位分析师';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 投资组合配置图表
+        const portfolioCtx = document.getElementById('portfolioAllocationChart').getContext('2d');
+        new Chart(portfolioCtx, {
+            type: 'bar',
+            data: {
+                labels: ['SOFI', 'UNH', '其他持仓', '现金'],
+                datasets: [{
+                    label: '当前配置（%）',
+                    data: [7.22, 18.39, 67.32, 7.07],
+                    backgroundColor: 'rgba(149, 165, 166, 0.6)',
+                    borderColor: '#95a5a6',
+                    borderWidth: 2
+                }, {
+                    label: '建议配置（%）',
+                    data: [4.8, 21.5, 67.7, 6.0],
+                    backgroundColor: 'rgba(46, 204, 113, 0.6)',
+                    borderColor: '#2ecc71',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + '：' + context.parsed.y.toFixed(1) + '%';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: '持仓'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 25,
+                        title: {
+                            display: true,
+                            text: '投资组合配置（%）'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
